@@ -137,3 +137,5 @@ for(i in seq(1:30)){
 tidy_dataset$subject_id = unlist(subject_ids)
 
 colnames(tidy_dataset) = col_names
+
+write.table(tidy_dataset, "tidy_dataset.txt", row.names = F)
