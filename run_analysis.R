@@ -1,69 +1,139 @@
+library(dplyr)
 
-##Step 1: Merge data of all files
-#   Files needed to be read:
+#Read training data into following variables
+x_train = read.fwf("UCI HAR Dataset/train/X_train.txt", widths = c(rep(16,561)))
+y_train = read.table("UCI HAR Dataset/train/y_train.txt", col.names = "activity_id")
 
-# - 'features.txt': List of all features.
-features = read.table("UCI HAR Dataset//features.txt", sep = " ", header = FALSE) 
+#Read testing data into following variables
+x_test = read.fwf("UCI HAR Dataset/test/X_test.txt", widths = c(rep(16,561)))
+y_test = read.table("UCI HAR Dataset/test/y_test.txt", col.names = "activity_id")
 
-# - 'activity_labels.txt': Links the class labels with their activity name.
-activity_labels = read.table("UCI HAR Dataset//activity_labels.txt", sep = " ", header = FALSE) 
+#Merge the data with labels for test and train data individually
+train_data = cbind(x_train, y_train)
+test_data = cbind(x_test, y_test)
 
-# - 'train/X_train.txt': Training set
-train.X = read.table("UCI HAR Dataset//train//X_train.txt", header = FALSE)
+#Merge test and train data
+uci_dataset = rbind(train_data, test_data)
 
-# - 'train/y_train.txt': Training labels.
-train.Y = read.table("UCI HAR Dataset//train//y_train.txt", header = FALSE) 
+#Extract the mean() and std() for all records
+cols_of_interest = c(1,2,3,4,5,6,41,42,43,44,45,46,81,82,83,84,85,86,121,122,
+                     123,124,125,126,161,162,163,164,165,166,201,202,214,215,
+                     227,228,240,241,253,254,266,267,268,269,270,271,345,346,
+                     347,348,349,350,424,425,426,427,428,429,503,504,516,517,
+                     529,530,542,543, 562)
 
-# - 'test/X_test.txt': Test set.
-test.X = read.table("UCI HAR Dataset//test//X_test.txt", header = FALSE) 
+activity_labels = c("WALKING", "WALKING_UPSTAIRS", "WALKING_DOWNSTAIRS",
+                    "SITTING", "STANDING", "LAYING")
 
-# - 'test/y_test.txt': Test labels.
-test.Y = read.table("UCI HAR Dataset//test//y_test.txt", header = FALSE) 
+uci_dataset_features_of_interest = uci_dataset[,cols_of_interest]
 
-# The following files are available for the train and test data. Their descriptions are equivalent. 
-# 
-# - 'train/subject_train.txt': Each row identifies the subject who performed the activity for each window sample. Its range is from 1 to 30. 
-train.subject_train = read.table("UCI HAR Dataset//train//subject_train.txt", header = FALSE) 
+uci_dataset_features_of_interest$activity_id =
+    factor(uci_dataset_features_of_interest$activity_id,
+           labels = activity_labels)
 
-# - 'train/Inertial Signals/total_acc_x_train.txt': The acceleration signal from the smartphone accelerometer X axis in standard gravity units 'g'. Every row shows a 128 element vector. The same description applies for the 'total_acc_y_train.txt' and 'total_acc_z_train.txt' files for the Y and Z axis. 
-train.internialsignal.total_acc_x = read.table("UCI HAR Dataset//train/Inertial Signals/total_acc_x_train.txt", header = FALSE) 
-train.internialsignal.total_acc_y = read.table("UCI HAR Dataset//train/Inertial Signals/total_acc_y_train.txt", header = FALSE) 
-train.internialsignal.total_acc_z = read.table("UCI HAR Dataset//train/Inertial Signals/total_acc_z_train.txt", header = FALSE) 
+#Rename all the columns
+col_names = c("tBodyAcc-mean()-X",
+              "tBodyAcc-mean()-Y",
+              "tBodyAcc-mean()-Z",
+              "tBodyAcc-std()-X",
+              "tBodyAcc-std()-Y",
+              "tBodyAcc-std()-Z",
+              "tGravityAcc-mean()-X",
+              "tGravityAcc-mean()-Y",
+              "tGravityAcc-mean()-Z",
+              "tGravityAcc-std()-X",
+              "tGravityAcc-std()-Y",
+              "tGravityAcc-std()-Z",
+              "tBodyAccJerk-mean()-X",
+              "tBodyAccJerk-mean()-Y",
+              "tBodyAccJerk-mean()-Z",
+              "tBodyAccJerk-std()-X",
+              "tBodyAccJerk-std()-Y",
+              "tBodyAccJerk-std()-Z",
+              "tBodyGyro-mean()-X",
+              "tBodyGyro-mean()-Y",
+              "tBodyGyro-mean()-Z",
+              "tBodyGyro-std()-X",
+              "tBodyGyro-std()-Y",
+              "tBodyGyro-std()-Z",
+              "tBodyGyroJerk-mean()-X",
+              "tBodyGyroJerk-mean()-Y",
+              "tBodyGyroJerk-mean()-Z",
+              "tBodyGyroJerk-std()-X",
+              "tBodyGyroJerk-std()-Y",
+              "tBodyGyroJerk-std()-Z",
+              "tBodyAccMag-mean()",
+              "tBodyAccMag-std()",
+              "tGravityAccMag-mean()",
+              "tGravityAccMag-std()",
+              "tBodyAccJerkMag-mean()",
+              "tBodyAccJerkMag-std()",
+              "tBodyGyroMag-mean()",
+              "tBodyGyroMag-std()",
+              "tBodyGyroJerkMag-mean()",
+              "tBodyGyroJerkMag-std()",
+              "fBodyAcc-mean()-X",
+              "fBodyAcc-mean()-Y",
+              "fBodyAcc-mean()-Z",
+              "fBodyAcc-std()-X",
+              "fBodyAcc-std()-Y",
+              "fBodyAcc-std()-Z",
+              "fBodyAccJerk-mean()-X",
+              "fBodyAccJerk-mean()-Y",
+              "fBodyAccJerk-mean()-Z",
+              "fBodyAccJerk-std()-X",
+              "fBodyAccJerk-std()-Y",
+              "fBodyAccJerk-std()-Z",
+              "fBodyGyro-mean()-X",
+              "fBodyGyro-mean()-Y",
+              "fBodyGyro-mean()-Z",
+              "fBodyGyro-std()-X",
+              "fBodyGyro-std()-Y",
+              "fBodyGyro-std()-Z",
+              "fBodyAccMag-mean()",
+              "fBodyAccMag-std()",
+              "fBodyBodyAccJerkMag-mean()",
+              "fBodyBodyAccJerkMag-std()",
+              "fBodyBodyGyroMag-mean()",
+              "fBodyBodyGyroMag-std()",
+              "fBodyBodyGyroJerkMag-mean()",
+              "fBodyBodyGyroJerkMag-std()",
+              "activity_label",
+              "subject_id")
 
-# - 'train/Inertial Signals/body_acc_x_train.txt': The body acceleration signal obtained by subtracting the gravity from the total acceleration. 
-train.internialsignal.body_acc_x = read.table("UCI HAR Dataset//train/Inertial Signals/body_acc_x_train.txt", header = FALSE) 
-train.internialsignal.body_acc_y = read.table("UCI HAR Dataset//train/Inertial Signals/body_acc_y_train.txt", header = FALSE) 
-train.internialsignal.body_acc_z = read.table("UCI HAR Dataset//train/Inertial Signals/body_acc_z_train.txt", header = FALSE) 
+#Read subject_ids
+subject_train = read.table("UCI HAR Dataset/train/subject_train.txt", col.names = "subject_id")
+subject_test = read.table("UCI HAR Dataset/test/subject_test.txt", col.names = "subject_id")
 
-# - 'train/Inertial Signals/body_gyro_x_train.txt': The angular velocity vector measured by the gyroscope for each window sample. The units are radians/second. 
-train.internialsignal.body_gyro_x = read.table("UCI HAR Dataset//train/Inertial Signals/body_gyro_x_train.txt", header = FALSE) 
-train.internialsignal.body_gyro_y = read.table("UCI HAR Dataset//train/Inertial Signals/body_gyro_y_train.txt", header = FALSE) 
-train.internialsignal.body_gyro_z = read.table("UCI HAR Dataset//train/Inertial Signals/body_gyro_z_train.txt", header = FALSE) 
+subject_ids = rbind(subject_train, subject_test)
 
-# - 'test/subject_test.txt': Each row identifies the subject who performed the activity for each window sample. Its range is from 1 to 30. 
-test.subject_test = read.table("UCI HAR Dataset//test//subject_test.txt", header = FALSE) 
+uci_dataset_features_of_interest$subject_id = subject_ids$subject_id
 
-# - 'test/Inertial Signals/total_acc_x_test.txt': The acceleration signal from the smartphone accelerometer X axis in standard gravity units 'g'. Every row shows a 128 element vector. The same description applies for the 'total_acc_y_test.txt' and 'total_acc_z_test.txt' files for the Y and Z axis. 
-test.internialsignal.total_acc_x = read.table("UCI HAR Dataset//test/Inertial Signals/total_acc_x_test.txt", header = FALSE) 
-test.internialsignal.total_acc_y = read.table("UCI HAR Dataset//test/Inertial Signals/total_acc_y_test.txt", header = FALSE) 
-test.internialsignal.total_acc_z = read.table("UCI HAR Dataset//test/Inertial Signals/total_acc_z_test.txt", header = FALSE) 
+colnames(uci_dataset_features_of_interest) = col_names
 
-# - 'test/Inertial Signals/body_acc_x_test.txt': The body acceleration signal obtained by subtracting the gravity from the total acceleration. 
-test.internialsignal.body_acc_x = read.table("UCI HAR Dataset//test/Inertial Signals/body_acc_x_test.txt", header = FALSE) 
-test.internialsignal.body_acc_y = read.table("UCI HAR Dataset//test/Inertial Signals/body_acc_y_test.txt", header = FALSE) 
-test.internialsignal.body_acc_z = read.table("UCI HAR Dataset//test/Inertial Signals/body_acc_z_test.txt", header = FALSE) 
+tidy_dataset = data.frame()
+for(i in seq(1:30)){
 
-# - 'test/Inertial Signals/body_gyro_x_test.txt': The angular velocity vector measured by the gyroscope for each window sample. The units are radians/second. 
-test.internialsignal.body_gyro_x = read.table("UCI HAR Dataset//test/Inertial Signals/body_gyro_x_test.txt", header = FALSE) 
-test.internialsignal.body_gyro_y = read.table("UCI HAR Dataset//test/Inertial Signals/body_gyro_y_test.txt", header = FALSE) 
-test.internialsignal.body_gyro_z = read.table("UCI HAR Dataset//test/Inertial Signals/body_gyro_z_test.txt", header = FALSE) 
+    selected_subjects = filter(uci_dataset_features_of_interest, subject_id == i)
 
-#Merge
+    for(activity in activity_labels){
+        selected_subject_activity = filter(selected_subjects, activity_label == activity)
 
-##Step 2: Extracts only the measurements on the mean and standard deviation for each measurement. 
+        col_means = colMeans(selected_subject_activity[,1:66])
+        #col_means$activity_label = activity
+        #col_means$subject_id = i
+        tidy_dataset = rbind(tidy_dataset, col_means)
+    }
+}
 
-##Step 3: Uses descriptive activity names to name the activities in the data set
+tidy_dataset$activity_label = activity_labels
 
-##Step 4: Appropriately labels the data set with descriptive variable names
+subject_ids = list()
+for(i in seq(1:30)){
+    subject_ids = append(subject_ids,rep(i,6))
+}
 
-##Step 5: From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject
+
+tidy_dataset$subject_id = unlist(subject_ids)
+
+colnames(tidy_dataset) = col_names
