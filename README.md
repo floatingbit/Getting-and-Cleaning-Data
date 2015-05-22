@@ -9,30 +9,12 @@ directory
 
 The code is an implementation of the following:
 
-1. Read all data files as per:
-- 'features.txt': List of all features.
+1. Merges the training and the test sets to create one data set.
+2. Extracts only the measurements on the mean and standard deviation for each measurement. 
+3. Uses descriptive activity names to name the activities in the data set
+4. Appropriately labels the data set with descriptive variable names. 
+5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
 
-- 'activity_labels.txt': Links the class labels with their activity name.
+Execute run_analysis.R ensuring that the UCI HAR Dataset folder is available in the working directory. 
 
-- 'train/X_train.txt': Training set.
-
-- 'train/y_train.txt': Training labels.
-
-- 'test/X_test.txt': Test set.
-
-- 'test/y_test.txt': Test labels.
-
-The following files are available for the train and test data. Their descriptions are equivalent. 
-
-- 'train/subject_train.txt': Each row identifies the subject who performed the activity for each window sample. Its range is from 1 to 30. 
-
-- 'train/Inertial Signals/total_acc_x_train.txt': The acceleration signal from the smartphone accelerometer X axis in standard gravity units 'g'. Every row shows a 128 element vector. The same description applies for the 'total_acc_y_train.txt' and 'total_acc_z_train.txt' files for the Y and Z axis. 
-
-- 'train/Inertial Signals/body_acc_x_train.txt': The body acceleration signal obtained by subtracting the gravity from the total acceleration. 
-
-- 'train/Inertial Signals/body_gyro_x_train.txt': The angular velocity vector measured by the gyroscope for each window sample. The units are radians/second. 
-
-
-2. Combine the test and train datasteps using merge
-
-3. 
+Output produced: tidy_dataset.txt which contains 66 columns measuring the following along with two additional columns which contain the subject_id and the activity label corresponding to each row in the dataset (180 rows in total).
