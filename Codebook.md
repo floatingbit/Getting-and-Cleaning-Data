@@ -1,4 +1,4 @@
-This code book contains the following sections based on the tidy data set that can be produced by running the script Run_Analysis.R:
+This code book contains the following sections based on the tidy data set that can be produced by running the script run_analysis.R:
   1. Variables
   2. Data
   3. Tranformations
