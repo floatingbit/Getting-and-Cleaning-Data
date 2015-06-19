@@ -3,7 +3,7 @@ This code book contains the following sections based on the tidy data set that c
   2. Data
   3. Tranformations
   
-1. Variables: 
+Section 1. Variables: 
 
 The variables whose data can be found in the tidy dataset are:
 tBodyAcc-mean()-X
@@ -75,12 +75,16 @@ fBodyBodyGyroJerkMag-std()
 activity_label
 subject_id
 
-2. The data available in the tidy set contains 180 observations of 68 variables regarding the data that had been collected from the accelerometers from the Samsung Galaxy S4.
+Section 2. The data available in the tidy set contains 180 observations of 68 variables regarding the data that had been collected from the accelerometers from the Samsung Galaxy S4.
 
-3. The following are the transformation steps that the data underwent:
+Section 3. The following are the transformation steps that the data underwent:
 
 i.  Merges the training and the test sets to create one data set.
+
 ii.  Extracts only the measurements on the mean and standard deviation for each measurement. 
-iii. Uses descriptive activity names to name the activities in the data set
+
+iii. Uses descriptive activity names to name the activities in the data set.
+
 iv.  Appropriately labels the data set with descriptive variable names. 
+
 v.   From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
